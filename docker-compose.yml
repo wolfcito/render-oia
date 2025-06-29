@@ -1,0 +1,46 @@
+version: "3.8"
+
+services:
+  # 1) Base de datos MySQL
+  mysql-db:
+    image: mysql:8
+    container_name: mysql-db
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - db_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+
+  # 2) Tu aplicación full-stack (React + Express)
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fullstack-app
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      MYSQL_HOST: mysql-db
+      PORT: ${PORT}
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mysql-db
+
+  # 3) (Opcional) Panel web para gestionar la BD
+  adminer:
+    image: adminer
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql-db
+
+volumes:
+  db_data:

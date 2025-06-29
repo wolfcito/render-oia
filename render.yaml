@@ -1,0 +1,50 @@
+# ───────────────────────────────────────────────────────────────
+# Blueprint para Render: MySQL + Node/Express + React (monorepo)
+# ───────────────────────────────────────────────────────────────
+
+services:
+  # 1) Servicio privado de MySQL
+  - type: pserv
+    runtime: image
+    name: mysql-db
+    image: 
+      url: mysql:8
+    disk:
+      name: mysql-data
+      mountPath: /var/lib/mysql
+      sizeGB: 10
+    envVars:
+      - key: MYSQL_DATABASE
+        value: mydb
+      - key: MYSQL_USER
+        value: user
+      - key: MYSQL_PASSWORD
+        value: secret
+      - key: MYSQL_ROOT_PASSWORD
+        value: rootsecret
+
+  # 2) Web Service para tu aplicación (cliente + servidor en un contenedor)
+  - type: web
+    runtime: docker
+    name: fullstack-app
+    repo: https://github.com/tu-org/tu-repo
+    branch: main
+    dockerfilePath: ./Dockerfile
+    envVars:
+      # Host interno que Render expone para el servicio mysql-db
+      - key: MYSQL_HOST
+        fromService:
+          type: pserv
+          name: mysql-db
+          property: host
+
+# (Opcional) Si necesitas PostgreSQL en lugar de MySQL, usarías 'databases:' aquí.
+# En este caso no definimos nada en 'databases', ya que usamos MySQL como pserv.
+databases: []
+
+# Grupo de variables común (opcional)
+envVarGroups:
+  - name: common
+    envVars:
+      - key: NODE_ENV
+        value: production

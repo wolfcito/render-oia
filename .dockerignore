@@ -1,0 +1,25 @@
+# Ignorar dependencias locales (se instalan dentro del contenedor)
+**/node_modules
+**/npm-debug.log*
+**/yarn-debug.log*
+**/yarn-error.log*
+
+# Ignorar builds locales
+client/build
+server/build
+dist
+
+# Ignorar archivos de configuración local
+.env
+.env.*
+
+# Ignorar sistemas
+.DS_Store
+Thumbs.db
+
+# Git
+.git
+.gitignore
+
+# Docker Compose override
+docker-compose.override.yml
