@@ -4,7 +4,7 @@ WORKDIR /app/client
 
 # Copia package.json y package-lock.json para que npm ci encuentre el lockfile
 COPY client/package.json client/package-lock.json ./
-RUN npm ci  # Requiere package-lock.json o npm-shrinkwrap.json para funcionar :contentReference[oaicite:0]{index=0}
+RUN npm ci
 
 COPY client/ ./
 RUN npm run build
@@ -15,7 +15,7 @@ WORKDIR /app/server
 
 # Igual para el servidor: copiar ambos archivos de dependencias
 COPY server/package.json server/package-lock.json ./
-RUN npm ci  # Garantiza instalación limpia basada en lockfile :contentReference[oaicite:1]{index=1}
+RUN npm ci
 
 COPY server/ ./
 # Copia los archivos estáticos generados por el cliente a public/

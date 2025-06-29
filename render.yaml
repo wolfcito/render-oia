@@ -27,7 +27,7 @@ services:
   - type: web
     runtime: docker
     name: fullstack-app
-    repo: https://github.com/tu-org/tu-repo
+    repo: https://github.com/wolfcito/render-oia
     branch: main
     dockerfilePath: ./Dockerfile
     envVars:
