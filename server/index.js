@@ -24,6 +24,24 @@ app.get('/api/hello', async (req, res) => {
   await conn.end();
 });
 
+app.get('/api/messages', async (req, res) => {
+  const conn = await initDB();
+  const [rows] = await conn.query('SELECT * FROM messages;');
+  await conn.end();
+  res.json(rows);
+});
+
+app.post('/api/messages', async (req, res) => {
+  const { message } = req.body;
+  const conn = await initDB();
+  const [result] = await conn.query(
+    'INSERT INTO messages (message) VALUES (?);',
+    [message]
+  );
+  await conn.end();
+  res.json({ insertedId: result.insertId });
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Express escuchando en puerto ${PORT}`);
